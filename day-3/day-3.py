@@ -9,38 +9,36 @@ def parse_step(step):
     return step[0], int(step[1:])
 
 
+def move_horizontally(path_coordinates, x, y, length):
+    _range = range(x, x + length, 1 if length > 0 else -1)
+    for i in _range:
+        if path_coordinates.get(i):
+            path_coordinates[i].update({y: True})
+        else:
+            path_coordinates[i] = {y: True}
+
+    return path_coordinates, x + length
+
+
+def move_vertically(path_coordinates, x, y, length):
+    _range = range(y, y + length, 1 if length > 0 else -1)
+    if path_coordinates.get(x):
+        path_coordinates[x].update({j: True for j in _range})
+    else:
+        path_coordinates[x] = {j: True for j in _range}
+
+    return path_coordinates, y + length
+
+
 def build_path_coordinates(path_steps):
     x, y = 0, 0
     path_coordinates = {}
     for step in path_steps:
         direction, length = parse_step(step)
-
-        if direction == 'R':
-            for k in range(x, x + length):
-                if path_coordinates.get(k):
-                    path_coordinates[k].update({y: True})
-                else:
-                    path_coordinates[k] = {y: True}
-            x += length
-        elif direction == 'L':
-            for k in range(x, x - length, -1):
-                if path_coordinates.get(k):
-                    path_coordinates[k].update({y: True})
-                else:
-                    path_coordinates[k] = {y: True}
-            x -= length
-        elif direction == 'U':
-            if path_coordinates.get(x):
-                path_coordinates[x].update({k: True for k in range(y, y + length)})
-            else:
-                path_coordinates[x] = {k: True for k in range(y, y + length)}
-            y += length
-        elif direction == 'D':
-            if path_coordinates.get(x):
-                path_coordinates[x].update({k: True for k in range(y, y - length, -1)})
-            else:
-                path_coordinates[x] = {k: True for k in range(y, y - length, -1)}
-            y -= length
+        if direction in 'RL':
+            path_coordinates, x = move_horizontally(path_coordinates, x, y, length if direction == 'R' else -length)
+        elif direction in 'UD':
+            path_coordinates, y = move_vertically(path_coordinates, x, y, length if direction == 'U' else -length)
 
     return path_coordinates
 
