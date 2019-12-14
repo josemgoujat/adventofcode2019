@@ -29,15 +29,17 @@ def run_program(program, index):
     return run_program(program, index + 4)
 
 
-memory = [program[0]] + [12, 2] + program[3:]
-answer_1 = run_program(memory, 0)[0]
+def build_memory(noun, verb):
+    return [program[0]] + [noun, verb] + program[3:]
+
+
+answer_1 = run_program(build_memory(12, 2), 0)[0]
 print(f'Answer 1: {answer_1}')
 
 
 # Star 2
 for noun, verb in itertools.product(range(100), range(100)):
-    memory = [program[0]] + [noun, verb] + program[3:]
-    if run_program(memory, 0)[0] == expected_output:
+    if run_program(build_memory(noun, verb), 0)[0] == expected_output:
         break
 
 answer_2 = 100 * noun + verb
