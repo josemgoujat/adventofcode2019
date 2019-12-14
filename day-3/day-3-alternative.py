@@ -13,6 +13,7 @@ with open('day-3.input', 'r') as input_f:
     path_steps_1, path_steps_2 = [line.split(',') for line in input_f.read().splitlines()]
 
 
+# Star 1
 def parse_step(step):
     return step[0], int(step[1:])
 
